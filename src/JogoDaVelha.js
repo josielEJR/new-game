@@ -1,5 +1,5 @@
 import React from 'react';
-import '/home/junior/jogo-da-velha/new-game/src/Tabuleiro.css'; // Importando os estilos CSS do tabuleiro
+import './Tabuleiro.css';
 
 const Tabuleiro = () => {
   return (

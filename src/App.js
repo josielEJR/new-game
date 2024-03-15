@@ -1,5 +1,5 @@
 import './Tabuleiro.css';
-import JogoDaVelha from './components/JogoDaVelha';
+import JogoDaVelha from './JogoDaVelha';
 
 function App() {
   return (
