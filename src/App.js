@@ -1,3 +1,4 @@
+import React from 'react';
 import './Tabuleiro.css';
 import JogoDaVelha from './JogoDaVelha';
 
