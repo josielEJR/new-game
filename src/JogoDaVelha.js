@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const JogoDaVelha = () => {
   const [quadrados, setQuadrados] = useState(Array(9).fill(null))
   const [proximaJogadaX, setProximaJogadaX] = useState(true) // Flag para indicar se é a vez do jogador X
   const [vencedor, setVencedor] = useState(null)
+  const [mensagem, setMensagem] = useState('Próxima jogada: X'); 
+
+  useEffect(() => {
+    if (vencedor) {
+      setMensagem(vencedor === 'Empate' ? 'Empate' : `O vencedor é: ${vencedor}`);
+    } else {
+      setMensagem(`Próxima jogada: ${proximaJogadaX ? 'O' : 'X'}`);
+    }
+  }, [vencedor, proximaJogadaX]);
 
   const handleClick = (index) => {
     if (quadrados[index] || vencedor) {
@@ -58,21 +67,17 @@ const JogoDaVelha = () => {
 
   return (
     <div className="tabuleiro">
+      <div className="mensagem">{mensagem}</div>
         {quadrados.map((quadrado, index) => (
           <button 
           key={index}
-          className="quadrado" 
+          className={`quadrado ${quadrado === 'X' ? 'x' : 'o'}`} // Adiciona a classe 'x' para o X e 'o' para o O 
           type="button" 
           onClick={() => 
           handleClick(index)}>
             {quadrado}
           </button>
         ))}
-      {vencedor && (
-        <div className="resultado">
-          {vencedor === 'Empate' ? 'Empate' : `O vencedor é: ${vencedor}`}
-        </div>
-      )}
       {vencedor && (
         <button className="reiniciar" onClick={handleReset}>
           Reiniciar

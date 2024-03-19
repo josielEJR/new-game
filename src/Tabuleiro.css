@@ -4,6 +4,7 @@
   align-items: center; /* Centralizar horizontalmente */
   justify-content: center; /* Centralizar verticalmente */
   height: 100vh; /* Definir altura total da tela */
+  background-color: darkgrey;
 }
 
 .tabuleiro {
@@ -13,6 +14,13 @@
   justify-content: center; /* Centraliza os quadrados horizontalmente */
 }
 
+.quadrado.x {
+  color: blue; /* Cor para o X */
+}
+
+.quadrado.o {
+  color: red; /* Cor para o O */
+}
 
 .quadrado {
   width: 100px;
@@ -35,19 +43,6 @@
   background-color: #e9e9e9;
 }
 
-.resultado {
-  margin-top: 20px; /* Espaçamento acima do texto do vencedor */
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center; /* Centraliza o texto horizontalmente */
-  position: absolute; /* Define o posicionamento absoluto */
-  top: 70%; /* Define a posição verticalmente no centro da tela */
-  left: 50%; /* Define a posição horizontalmente no centro da tela */
-  transform: translate(-50%, -50%); /* Corrige o posicionamento para centralizar totalmente */
-  background-color: rgba(255, 255, 255, 0.8); /* Adiciona um fundo branco translúcido */
-  padding: 10px; /* Adiciona espaço interno */
-}
-
 .reiniciar{
   font-size: 20px;
   font-weight: bold;
@@ -56,4 +51,16 @@
   top: 78%; /* Define a posição verticalmente no centro da tela */
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.mensagem{
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  position: absolute;
+  top: 28%; /* Define a posição verticalmente no centro da tela */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8); /* Adiciona um fundo branco translúcido */
+  padding: 10px; /* Adiciona espaço interno */
 }
