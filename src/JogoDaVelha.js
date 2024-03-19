@@ -1,35 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const JogoDaVelha = () => {
-  const [quadrados, setQuadrados] = useState(Array(9).fill(null))
-  const [proximaJogadaX, setProximaJogadaX] = useState(true) // Flag para indicar se é a vez do jogador X
-  const [vencedor, setVencedor] = useState(null)
-  const [mensagem, setMensagem] = useState('Próxima jogada: X'); 
+  const [quadrados, setQuadrados] = useState(Array(9).fill(null));
+  const [proximaJogadaX, setProximaJogadaX] = useState(true); // Flag para indicar se é a vez do jogador X
+  const [vencedor, setVencedor] = useState(null);
+  const [mensagem, setMensagem] = useState('Próxima jogada: X');
 
-  useEffect(() => {
-    if (vencedor) {
-      setMensagem(vencedor === 'Empate' ? 'Empate' : `O vencedor é: ${vencedor}`);
-    } else {
-      setMensagem(`Próxima jogada: ${proximaJogadaX ? 'O' : 'X'}`);
-    }
-  }, [vencedor, proximaJogadaX]);
-
-  const handleClick = (index) => {
-    if (quadrados[index] || vencedor) {
+  const handleClick = useCallback((index) => {
+    if (quadrados[index] || vencedor || !proximaJogadaX) {
       return;
     }
     const novosQuadrados = [...quadrados];
-    novosQuadrados[index] = proximaJogadaX ? 'O' : 'X';
+    novosQuadrados[index] = proximaJogadaX ? 'X' : 'O';
     setQuadrados(novosQuadrados);
-    setProximaJogadaX(!proximaJogadaX);
     const winner = calculateWinner(novosQuadrados);
     if (winner) {
       setVencedor(winner);
     } else if (novosQuadrados.every((quadrado) => quadrado !== null)) {
       // Verifica se todos os quadrados estão preenchidos e não há vencedor
       setVencedor('Empate');
+    } else {
+      setProximaJogadaX(!proximaJogadaX); // Alterna para o próximo jogador apenas quando não há vencedor
     }
-  };
+  }, [quadrados, vencedor, proximaJogadaX]);
+
+  useEffect(() => {
+    const jogadaMaquina = () => {
+      if (!vencedor && !proximaJogadaX) { // Verifica se não há vencedor e é a vez da máquina
+        const posicoesVazias = quadrados.reduce((acc, curr, index) => {
+          if (curr === null) {
+            acc.push(index);
+          }
+          return acc;
+        }, []);
+        const posicaoAleatoria = posicoesVazias[Math.floor(Math.random() * posicoesVazias.length)];
+        const novosQuadrados = [...quadrados];
+        novosQuadrados[posicaoAleatoria] = 'O'; // Assumindo que 'O' representa a jogada da máquina
+        setQuadrados(novosQuadrados);
+      }
+    };
+  
+    jogadaMaquina(); // Executa a jogada da máquina em cada renderização
+  
+    // Verifica o vencedor após a jogada da máquina
+    const winner = calculateWinner(quadrados);
+    if (winner) {
+      setVencedor(winner);
+    } else if (quadrados.every((quadrado) => quadrado !== null)) {
+      setVencedor('Empate');
+    } else {
+      setProximaJogadaX(true); // Se nenhum vencedor e não há empate, é a vez do jogador X
+    }
+  }, [quadrados, vencedor, proximaJogadaX]);
+  
+
+  useEffect(() => {
+    if (vencedor) {
+      setMensagem(vencedor === 'Empate' ? 'Empate' : `O vencedor é: ${vencedor}`);
+    } else {
+      setMensagem(`Próxima jogada: ${proximaJogadaX ? 'X' : 'O'}`);
+    }
+  }, [vencedor, proximaJogadaX]);
 
   const calculateWinner = (quadrados) => {
     // Array contendo todas as combinações possíveis de vitória
@@ -63,6 +94,7 @@ const JogoDaVelha = () => {
     setQuadrados(Array(9).fill(null));
     setProximaJogadaX(true);
     setVencedor(null);
+    setMensagem('Próxima jogada: X');
   };
 
   return (
@@ -84,8 +116,6 @@ const JogoDaVelha = () => {
         </button>
       )}
     </div>
-
   );
 };
-
 export default JogoDaVelha;
