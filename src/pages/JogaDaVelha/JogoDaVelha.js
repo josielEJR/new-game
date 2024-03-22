@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import './Tabuleiro.css'
 
 const JogoDaVelha = () => {
   const [quadrados, setQuadrados] = useState(Array(9).fill(null));
@@ -27,21 +28,22 @@ const JogoDaVelha = () => {
   useEffect(() => {
     const jogadaMaquina = () => {
       if (!vencedor && !proximaJogadaX) { // Verifica se não há vencedor e é a vez da máquina
-        const posicoesVazias = quadrados.reduce((acc, curr, index) => {
-          if (curr === null) {
-            acc.push(index);
-          }
-          return acc;
-        }, []);
-        const posicaoAleatoria = posicoesVazias[Math.floor(Math.random() * posicoesVazias.length)];
-        const novosQuadrados = [...quadrados];
-        novosQuadrados[posicaoAleatoria] = 'O'; // Assumindo que 'O' representa a jogada da máquina
-        setQuadrados(novosQuadrados);
+        setTimeout(() => {
+          const posicoesVazias = quadrados.reduce((acc, curr, index) => {
+            if (curr === null) {
+              acc.push(index);
+            }
+            return acc;
+          }, []);
+          const posicaoAleatoria = posicoesVazias[Math.floor(Math.random() * posicoesVazias.length)];
+          const novosQuadrados = [...quadrados];
+          novosQuadrados[posicaoAleatoria] = 'O'; // Assumindo que 'O' representa a jogada da máquina
+          setQuadrados(novosQuadrados);
+        }, 1000); // Atraso de 1 segundo (1000 milissegundos) antes da jogada da máquina
       }
     };
   
     jogadaMaquina(); // Executa a jogada da máquina em cada renderização
-  
     // Verifica o vencedor após a jogada da máquina
     const winner = calculateWinner(quadrados);
     if (winner) {
@@ -58,7 +60,7 @@ const JogoDaVelha = () => {
     if (vencedor) {
       setMensagem(vencedor === 'Empate' ? 'Empate' : `O vencedor é: ${vencedor}`);
     } else {
-      setMensagem(`Próxima jogada: ${proximaJogadaX ? 'X' : 'O'}`);
+      setMensagem(proximaJogadaX ? 'Próxima jogada: X' : 'Aguarde a jogada da máquina...');
     }
   }, [vencedor, proximaJogadaX]);
 
@@ -98,6 +100,7 @@ const JogoDaVelha = () => {
   };
 
   return (
+    <div className='game'>
     <div className="tabuleiro">
       <div className="mensagem">{mensagem}</div>
         {quadrados.map((quadrado, index) => (
@@ -115,6 +118,7 @@ const JogoDaVelha = () => {
           Reiniciar
         </button>
       )}
+    </div>
     </div>
   );
 };

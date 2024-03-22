@@ -1,0 +1,22 @@
+nav {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+  
+  nav a {
+    margin: 0 10px;
+    padding: 5px;
+    text-decoration: none;
+    color: #ef2bc8;
+    margin-top: 5px;
+    font-size: 30px;
+  }
+  
+  nav a:hover {
+    color: #ccc;
+  }
+  
+
+  

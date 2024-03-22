@@ -1,0 +1,24 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  }
+  
+  .caixa {
+    width: 700px;
+    height: 700px;
+    background-color: rgb(103, 103, 206);
+    position: relative; /* Alterado para relativo */
+}
+
+.bolinha {
+    width: 60px;
+    height: 60px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
