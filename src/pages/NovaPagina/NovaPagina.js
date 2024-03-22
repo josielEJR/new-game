@@ -1,83 +1,104 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './NovaPagina.css';
 
 const NovaPagina = () => {
-  const [keysPressed, setKeysPressed] = useState({});
+  const [bolinhas, setBolinhas] = useState([]);
+  const [bolinhaPosition, setBolinhaPosition] = useState({ left: 320, top: 315});
+  const [pressedKeys, setPressedKeys] = useState([]);
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      event.preventDefault();
-      setKeysPressed((prevKeysPressed) => ({
-        ...prevKeysPressed,
-        [event.keyCode]: true,
-      }));
+    const addBolinha = () => {
+      const novaBolinha = {
+        left: Math.random() * 690,
+        top: 10,
+      };
+      setBolinhas((prevBolinhas) => [...prevBolinhas, novaBolinha]);
     };
 
-    const handleKeyUp = (event) => {
-      setKeysPressed((prevKeysPressed) => ({
-        ...prevKeysPressed,
-        [event.keyCode]: false,
-      }));
+    const interval = setInterval(addBolinha, 1000);
+
+    const moveBolinhas = () => {
+      setBolinhas((prevBolinhas) =>
+        prevBolinhas.map((bolinha) => ({
+          ...bolinha,
+          top: bolinha.top + 5,
+        }))
+      );
     };
 
+    const moveInterval = setInterval(moveBolinhas, 50);
+
+    const removeBolinhas = () => {
+      setBolinhas((prevBolinhas) => prevBolinhas.filter((bolinha) => bolinha.top <= 675));
+    };
+
+    const removeInterval = setInterval(removeBolinhas, 100);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(moveInterval);
+      clearInterval(removeInterval);
+    };
+  }, []);
+
+  useEffect(() =>  {
+    const moveBolinha = () => {
+      const { left, top } = bolinhaPosition;
+      const step = 5;
+      let newLeft = left;
+      let newTop = top;
+
+      if (pressedKeys.includes(37)) { // Seta para a esquerda
+        newLeft = Math.max(0, left - step);
+      }
+      if (pressedKeys.includes(38)) { // Seta para cima
+        newTop = Math.max(0, top - step);
+      }
+      if (pressedKeys.includes(39)) { // Seta para a direita
+        newLeft = Math.min(640, left + step);
+      }
+      if (pressedKeys.includes(40)) { // Seta para baixo
+        newTop = Math.min(640, top + step);
+      }
+
+      setBolinhaPosition({ left: newLeft, top: newTop });
+    };
+
+    const moveInterval = setInterval(moveBolinha, 50);
+
+    return () => clearInterval(moveInterval);
+  }, [pressedKeys, bolinhaPosition]);
+
+  const handleKeyDown = useCallback((event) => {
+    if (!pressedKeys.includes(event.keyCode)) {
+      setPressedKeys((prevPressedKeys) => [...prevPressedKeys, event.keyCode]);
+    }
+  }, [pressedKeys]);
+
+  const handleKeyUp = useCallback((event) => {
+    setPressedKeys((prevPressedKeys) => prevPressedKeys.filter((keyCode) => keyCode !== event.keyCode));
+  }, []);
+
+  useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
     };
-  }, []);
-
-  useEffect(() => {
-    const quadrado = document.getElementById('caixa');
-    const bolinha = quadrado.querySelector('.bolinha');
-
-    if (!quadrado || !bolinha) return;
-
-    const bolinhaStyle = getComputedStyle(bolinha);
-    let bolinhaLeft = parseInt(bolinhaStyle.left);
-    let bolinhaTop = parseInt(bolinhaStyle.top);
-    const limite = 669;
-    const limiteT = 31;
-    let deltaX = 0;
-    let deltaY = 0;
-
-    const moveBolinha = () => {
-      if (keysPressed[37] && bolinhaLeft > limiteT) {
-        deltaX = -1;
-      } else if (keysPressed[39] && bolinhaLeft < limite) {
-        deltaX = 1;
-      } else {
-        deltaX = 0;
-      }
-
-      if (keysPressed[38] && bolinhaTop > limiteT) {
-        deltaY = -1;
-      } else if (keysPressed[40] && bolinhaTop < limite) {
-        deltaY = 1;
-      } else {
-        deltaY = 0;
-      }
-
-      bolinhaLeft += deltaX;
-      bolinhaTop += deltaY;
-
-      bolinha.style.left = bolinhaLeft + 'px';
-      bolinha.style.top = bolinhaTop + 'px';
-
-      requestAnimationFrame(moveBolinha);
-    };
-
-    moveBolinha();
-
-    return () => cancelAnimationFrame(moveBolinha);
-  }, [keysPressed]);
+  }, [handleKeyDown, handleKeyUp]);
 
   return (
     <div className="container">
       <div className="caixa" id="caixa">
-        <div className="bolinha"></div>
+        {bolinhas.map((bolinha, index) => (
+          <div
+            key={index}
+            className="bolinha"
+            style={{ left: bolinha.left, top: bolinha.top }}
+          ></div>
+        ))}
+        <div className="bolinha-movida" style={{ left: bolinhaPosition.left + 'px', top: bolinhaPosition.top + 'px' }}></div>
       </div>
     </div>
   );

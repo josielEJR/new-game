@@ -10,15 +10,21 @@
     height: 700px;
     background-color: rgb(103, 103, 206);
     position: relative; /* Alterado para relativo */
+    margin: 10px 0 10px 0;
 }
 
 .bolinha {
-    width: 60px;
-    height: 60px;
-    background-color: black;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  width: 20px; /* Tamanho da bolinha */
+  height: 20px; /* Tamanho da bolinha */
+  background-color: red; /* Cor da bolinha */
+  border-radius: 50%; /* Torna a bolinha redonda */
+  position: absolute; /* Permite posicionar a bolinha dentro da caixa */
+}
+
+.bolinha-movida {
+  width: 60px; /* Tamanho da bolinha */
+  height: 60px; /* Tamanho da bolinha */
+  background-color: blue; /* Cor da bolinha */
+  border-radius: 50%; /* Torna a bolinha redonda */
+  position: absolute;
 }
