@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './Tabuleiro.css'
 
 const JogoDaVelha = () => {
   const [quadrados, setQuadrados] = useState(Array(9).fill(null));
@@ -55,7 +54,6 @@ const JogoDaVelha = () => {
     }
   }, [quadrados, vencedor, proximaJogadaX]);
   
-
   useEffect(() => {
     if (vencedor) {
       setMensagem(vencedor === 'Empate' ? 'Empate' : `O vencedor é: ${vencedor}`);
@@ -76,7 +74,6 @@ const JogoDaVelha = () => {
       [0, 4, 8],
       [2, 4, 6],
     ];
-  
     // Verifica todas as combinações de vitória
     for (let i = 0; i < linhasVitoria.length; i++) {
       const [a, b, c] = linhasVitoria[i];
@@ -85,41 +82,42 @@ const JogoDaVelha = () => {
         return quadrados[a];
       }
     }
-  
     // Se nenhuma combinação de vitória for encontrada e ainda houver quadrados vazios, o jogo continua
     if (quadrados.some((quadrado) => quadrado === null)) {
       return null;
     }
-  };
+  }
 
   const handleReset = () => {
-    setQuadrados(Array(9).fill(null));
-    setProximaJogadaX(true);
-    setVencedor(null);
-    setMensagem('Próxima jogada: X');
-  };
+    setQuadrados(Array(9).fill(null))
+    setProximaJogadaX(true)
+    setVencedor(null)
+    setMensagem('Próxima jogada: X')
+  }
 
   return (
-    <div className='game'>
-    <div className="tabuleiro">
-      <div className="mensagem">{mensagem}</div>
+    <div className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-screen flex justify-center items-center'>
+      <div className="bg-cyan-100 grid grid-cols-3 grid-rows-3 gap-4 border-black relative">
+        <div className="col-span-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-lg font-bold text-center bg-white bg-opacity-80 p-2 border-double border-2 border-azure" style={{ width: '200px', height: '10%', top:"-30px" }}>
+          {mensagem}
+        </div>
         {quadrados.map((quadrado, index) => (
           <button 
-          key={index}
-          className={`quadrado ${quadrado === 'X' ? 'x' : 'o'}`} // Adiciona a classe 'x' para o X e 'o' para o O 
-          type="button" 
-          onClick={() => 
-          handleClick(index)}>
+            key={index}
+            className={`w-32 h-32 border border-black border-4 flex justify-center items-center text-3xl cursor-pointer ${quadrado === 'X' ? 'text-blue-500' : 'text-red-500'}`}
+            type="button" 
+            onClick={() => handleClick(index)}
+          >
             {quadrado}
           </button>
         ))}
-      {vencedor && (
-        <button className="reiniciar" onClick={handleReset}>
-          Reiniciar
-        </button>
-      )}
+        {vencedor && (
+          <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-lg font-bold text-center bg-cyan-500 cursor-pointer border-2 border-solid border-cyan-500 p-2" style={{ height: '10%', top:"450px" }} onClick={handleReset}>
+            Reiniciar
+          </button>
+        )}
+      </div>
     </div>
-    </div>
-  );
-};
+  )
+}
 export default JogoDaVelha;

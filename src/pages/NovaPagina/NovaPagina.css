@@ -9,14 +9,14 @@
     width: 700px;
     height: 700px;
     background-color: rgb(103, 103, 206);
-    position: relative; /* Alterado para relativo */
+    position: relative; 
     margin: 10px 0 10px 0;
 }
 
 .bolinha {
   width: 20px; /* Tamanho da bolinha */
   height: 20px; /* Tamanho da bolinha */
-  background-color: red; /* Cor da bolinha */
+  background-color: #3498db; /* Cor da bolinha */
   border-radius: 50%; /* Torna a bolinha redonda */
   position: absolute; /* Permite posicionar a bolinha dentro da caixa */
 }
@@ -27,4 +27,34 @@
   background-color: blue; /* Cor da bolinha */
   border-radius: 50%; /* Torna a bolinha redonda */
   position: absolute;
+}
+
+.game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 100px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  text-align: center;
+}
+
+.Reiniciar {
+  position: absolute;
+  margin-top: 720px;
+}
+
+.Reiniciar button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #e94646;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.Reiniciar button:hover {
+  background-color: #45a049;
 }

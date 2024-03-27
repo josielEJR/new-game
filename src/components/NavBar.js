@@ -1,14 +1,29 @@
-import "./NavBar.css"
-
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
-  return (<nav>
-        <Link to="/">Home</Link>
-        <Link to="/Velha"> Jogo da velha</Link>
-        <Link to="/nova"> Jogo da bolinha</Link>
-  </nav>
-  )
-}
+  return (
+    <nav className="flex justify-center relative z-10 bg-black">
+      <NavLink
+        exact="true"
+        to="/"
+        className="text-red-500 my-2 py-1 p-5 text-4xl hover:text-gray-300"
+      >
+        Home
+      </NavLink>
+      <NavLink
+        to="/Velha"
+        className="text-red-500 my-2 py-1 p-5 text-4xl hover:text-gray-300"
+      >
+        Jogo da velha
+      </NavLink>
+      <NavLink
+        to="/nova"
+        className="text-red-500 my-2 py-1 p-5 text-4xl hover:text-gray-300"
+      >
+        Jogo da bolinha
+      </NavLink>
+    </nav>
+  );
+};
 
-export default NavBar
+export default NavBar;
