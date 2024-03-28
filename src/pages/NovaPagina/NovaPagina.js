@@ -8,23 +8,26 @@ const NovaPagina = () => {
   const [chuvaBolinhasIntervalId, setChuvaBolinhasIntervalId] = useState(null);
   const [removeBolinhasIntervalId, setRemoveBolinhasIntervalId] = useState(null);
   const [moveBolinhaIntervalId, setMoveBolinhaIntervalId] = useState(null);
-  const [restartGame, setRestartGame] = useState(false); // Novo estado para controlar o reinício do jogo
+  const [restartGame, setRestartGame] = useState(false);
+  const [startGame, setStartGame] = useState(false)
   
   useEffect(() => {
-    const addBolinha = () => {
-      if (!gameOver) {
-        const novaBolinha = {
-          left: Math.random() * 685,
-          top: 10,
-        };
-        setBolinhas((prevBolinhas) => [...prevBolinhas, novaBolinha]);
-      }
-    };
-  
-    const intervalId = setInterval(addBolinha, 1000);
+    if (startGame) {
+      const addBolinha = () => {
+        if (!gameOver) {
+          const novaBolinha = {
+            left: Math.random() * 673,
+            top: 10,
+          };
+          setBolinhas((prevBolinhas) => [...prevBolinhas, novaBolinha]);
+        }
+      };
     
-    return () => clearInterval(intervalId);
-  }, [gameOver]);
+      const intervalId = setInterval(addBolinha, 1000);
+      
+      return () => clearInterval(intervalId);
+    }
+  }, [startGame, gameOver]);
   // efeito para as bolinhas cair e remover quando chegar no final 
   useEffect(() => {
     const chuvaBolinhas = () => {
@@ -42,7 +45,7 @@ const NovaPagina = () => {
     setChuvaBolinhasIntervalId(moveIntervalId);
   
     const removeBolinhas = () => {
-      setBolinhas((prevBolinhas) => prevBolinhas.filter((bolinha) => bolinha.top <= 675));
+      setBolinhas((prevBolinhas) => prevBolinhas.filter((bolinha) => bolinha.top <= 666));
     };
   
     const removeIntervalId = setInterval(removeBolinhas, 100);
@@ -68,10 +71,10 @@ const NovaPagina = () => {
         newTop = Math.max(0, top - step);
       }
       if (pressedKeys.includes(39)) {
-        newLeft = Math.min(640, left + step);
+        newLeft = Math.min(640 - 10, left + step);
       }
       if (pressedKeys.includes(40)) {
-        newTop = Math.min(640, top + step);
+        newTop = Math.min(640 - 10, top + step);
       }
 
       setBolinhaPosition({ left: newLeft, top: newTop });
@@ -139,7 +142,7 @@ const NovaPagina = () => {
     setGameOver(false);
     setRestartGame(true); // Sinaliza que o jogo está sendo reiniciado
   }
-  
+
   useEffect(() => {
     if (restartGame) {    
       // Reinicia o jogo aqui, por exemplo, reiniciando os intervalos
@@ -157,6 +160,32 @@ const NovaPagina = () => {
     }
     setRestartGame(false); // Resetar o estado de reinício após reiniciar o jogo
   }, [restartGame, gameOver])
+
+  const handleStart = () => {
+    setBolinhas([]); // Limpa o estado das bolinhas
+    setBolinhaPosition({ left: 320, top: 315 });
+    setPressedKeys([]);
+    setGameOver(false);
+    setStartGame(true); // Sinaliza que o jogo está sendo iniciado
+  }
+  useEffect(() => {
+    if (startGame) {    
+      // Reinicia o jogo aqui, por exemplo, reiniciando os intervalos
+      const intervalId = setInterval(() => {
+        if (!gameOver) {
+          const novaBolinha = {
+            left: Math.random() * 687,
+            top: 15,
+          };
+          setBolinhas((prevBolinhas) => [...prevBolinhas, novaBolinha]);
+        }
+      }, 1000);
+      // Limpa o intervalo quando o componente é desmontado ou o jogo reiniciado
+      return () => clearInterval(intervalId);
+    }
+    setStartGame(false); // Resetar o estado de reinício após reiniciar o jogo
+  }, [gameOver, restartGame, chuvaBolinhasIntervalId, removeBolinhasIntervalId, moveBolinhaIntervalId, startGame])
+
 // logica para parar de aparecer bolinhas após intervalos
   useEffect(() => {
     if (gameOver) {
@@ -168,26 +197,26 @@ const NovaPagina = () => {
 
   return (
     //div pai que abraça todos os componentes
-    <div className="h-screen overflow-auto bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-center items-center">
+<div className="h-screen overflow-auto bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-center items-center">
     {/* div da caixa do jogo */}
     <div className="box-border w-700 h-700 relative m-10 p-4 border-4 border-black" style={{ bottom: '50px' }}>
       {bolinhas.map((bolinha, index) => (
-        <div // div da bolinha que cai
+    <div // div da bolinha que cai
           key={index} 
           className="w-5 h-5 bg-teal-200 rounded-full absolute"
-          style={{ left: bolinha.left, top: bolinha.top }}
-        ></div>
+          style={{ left: bolinha.left, top: bolinha.top }}>
+    </div>
       ))}
       {/* div da bolinha que se move */}
-      <div
+    <div
         className="w-6 h-6 bg-blue-500 rounded-full absolute"
         style={{ left: bolinhaPosition.left + 'px', top: bolinhaPosition.top + 'px' }}>
-      </div>
+    </div>
       {/* Exibir "GameOver" se o jogo acabou */}
       {gameOver && 
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-black text-center">
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-black text-center">
         GameOver
-      </div>}
+    </div>}
     </div>
     {/* botão de reiniciar */}
     {gameOver &&
@@ -196,9 +225,18 @@ const NovaPagina = () => {
         onClick={handleRestart}
         className="px-5 py-4 text-base bg-red-600 text-white rounded-md border-none cursor-pointer transition-colors duration-300 hover:bg-green-600">
         Reiniciar
-  </button>
-</div>}
-    </div>
+      </button>
+    </div>}
+    {/* botão de satart */}
+    {!startGame &&
+    <div className="absolute top-16 left-1/2 transform -translate-x-1/2 mb-10">
+      <button
+        onClick={handleStart}
+        className="px-5 py-4 text-base bg-red-600 text-white rounded-md border-none cursor-pointer transition-colors duration-300 hover:bg-green-600">
+        Start
+      </button>
+    </div>}
+</div>    
   );
 };
 
