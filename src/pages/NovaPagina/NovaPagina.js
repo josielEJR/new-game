@@ -10,24 +10,26 @@ const NovaPagina = () => {
   const [moveBolinhaIntervalId, setMoveBolinhaIntervalId] = useState(null);
   const [restartGame, setRestartGame] = useState(false);
   const [startGame, setStartGame] = useState(false)
+  const [points, setPoints] = useState(0)
   
   useEffect(() => {
     if (startGame) {
       const addBolinha = () => {
         if (!gameOver) {
+          console.log('Adicionando bolinha...')
           const novaBolinha = {
-            left: Math.random() * 673,
+            left: Math.random() * 670,
             top: 10,
           };
           setBolinhas((prevBolinhas) => [...prevBolinhas, novaBolinha]);
         }
       };
     
-      const intervalId = setInterval(addBolinha, 1000);
+      const intervalId = setInterval(addBolinha, 1000)
       
-      return () => clearInterval(intervalId);
+      return () => clearInterval(intervalId)
     }
-  }, [startGame, gameOver]);
+  }, [startGame, gameOver])
   // efeito para as bolinhas cair e remover quando chegar no final 
   useEffect(() => {
     const chuvaBolinhas = () => {
@@ -141,6 +143,7 @@ const NovaPagina = () => {
     setPressedKeys([]);
     setGameOver(false);
     setRestartGame(true); // Sinaliza que o jogo está sendo reiniciado
+    setPoints(0) // rseta os pontos obtidos 
   }
 
   useEffect(() => {
@@ -167,6 +170,7 @@ const NovaPagina = () => {
     setPressedKeys([]);
     setGameOver(false);
     setStartGame(true); // Sinaliza que o jogo está sendo iniciado
+    setPoints(0)// reseta os pontos
   }
   useEffect(() => {
     if (startGame) {    
@@ -186,6 +190,21 @@ const NovaPagina = () => {
     setStartGame(false); // Resetar o estado de reinício após reiniciar o jogo
   }, [gameOver, restartGame, chuvaBolinhasIntervalId, removeBolinhasIntervalId, moveBolinhaIntervalId, startGame])
 
+  useEffect(() => {
+    // Função para atualizar os pontos a cada segundo
+    const updatePoints = () => {
+      if ( startGame && !gameOver) {
+        // Incrementa os pontos a cada segundo
+        setPoints((prevPoints) => prevPoints + 5);
+      }
+    };
+
+    // Atualiza os pontos a cada segundo
+    const intervalId = setInterval(updatePoints, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [gameOver, startGame]);
+
 // logica para parar de aparecer bolinhas após intervalos
   useEffect(() => {
     if (gameOver) {
@@ -197,10 +216,13 @@ const NovaPagina = () => {
 
   return (
     //div pai que abraça todos os componentes
-<div className="h-screen overflow-auto bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-center items-center">
+    <div 
+    className="h-screen overflow-auto bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-center items-center">
     {/* div da caixa do jogo */}
-    <div className="box-border w-700 h-700 relative m-10 p-4 border-4 border-black" style={{ bottom: '50px' }}>
-      {bolinhas.map((bolinha, index) => (
+    <div 
+        className="box-border w-700 h-700 relative m-10 p-4 border-4 border-black" 
+        style={{ bottom: '50px' }}>
+        {bolinhas.map((bolinha, index) => (
     <div // div da bolinha que cai
           key={index} 
           className="w-5 h-5 bg-teal-200 rounded-full absolute"
@@ -236,7 +258,15 @@ const NovaPagina = () => {
         Start
       </button>
     </div>}
-</div>    
+    {/* Exibir a pontuação ao lado da caixa do jogo */}
+    <div className="bg-gray-200 p-4 rounded-lg absolute  top-40 " style={{marginLeft:"900px"}}>
+        <h1 className="text-3xl font-bold mb-4">Pontuação</h1>
+        <div className="flex items-center">
+          <span className="text-2xl font-bold mr-2">{points}</span>
+          <span className="text-xl">pontos</span>
+        </div>
+      </div>
+    </div>
   );
 };
 

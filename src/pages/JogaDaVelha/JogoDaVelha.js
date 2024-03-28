@@ -97,30 +97,42 @@ const JogoDaVelha = () => {
 
   return (
     // div pai 
-    <div className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-screen flex justify-center items-center'>
-      {/* div do tabuleiro  */}
-      <div className="bg-cyan-100 grid grid-cols-3 grid-rows-3 gap-4 border-black relative">
-        {/* div de mensagem pra proxima jogada */}
-        <div className="col-span-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-lg font-bold text-center bg-white bg-opacity-80 p-2 border-double border-2 border-azure" style={{ width: '200px', height: '10%', top:"-30px" }}>
-          {mensagem}
-        </div>
-        {quadrados.map((quadrado, index) => (
-          <button // botão de reiniciar 
-            key={index}
-            className={`w-32 h-32 border border-black border-4 flex justify-center items-center text-3xl cursor-pointer ${quadrado === 'X' ? 'text-blue-500' : 'text-red-500'}`}
-            type="button" 
-            onClick={() => handleClick(index)}
-          >
-            {quadrado}
-          </button>
-        ))}
-        {vencedor && (
-          <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-lg font-bold text-center bg-cyan-500 cursor-pointer border-2 border-solid border-cyan-500 p-2" style={{ height: '10%', top:"450px" }} onClick={handleReset}>
-            Reiniciar
-          </button>
-        )}
-      </div>
+    <div 
+      className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-screen flex justify-center items-center'>
+    <div 
+      className="bg-cyan-100 grid grid-cols-3 grid-rows-3 gap-4 border-black relative"
+      style={{ bottom: '50px' }}>
+      {/* caixa de mensagem  */}
+    <div 
+      className="absolute left-1/2 transform -translate-x-1/2 mb-10 text-lg font-bold text-center bg-white bg-opacity-80 p-2 border-double border-2 border-azure" style={{ width: '200px', height: '10%', top:"-50px" }}>
+      {mensagem}
+    </div>
+      {/* marcador de quadrado  */}
+      {quadrados.map((quadrado, index) => (
+    <button 
+      key={index}
+      className={`w-32 h-32 border border-black border-4 flex justify-center items-center text-3xl cursor-pointer ${quadrado === 'X' ? 'text-blue-500' : 'text-red-500'}`}
+      type="button" 
+      onClick={() => handleClick(index)}
+      >
+      {quadrado}
+    </button>))}
+      {/* botão de reiniciar  */}
+      {vencedor && (
+    <div 
+      className="absolute left-1/2 transform -translate-x-1/2 mb-10"
+      style={{bottom:"-100px"}}>
+    <button
+      onClick={handleReset} 
+      className="px-5 py-4 text-base bg-red-600 text-white rounded-md border-none cursor-pointer transition-colors duration-300 hover:bg-green-600" 
+      style={{ height: '10%', top:"450px" }} >
+      Reiniciar
+    </button>
+    </div>)}
+    </div>
     </div>
   )
 }
-export default JogoDaVelha;
+export default JogoDaVelha;   
+        
+    
