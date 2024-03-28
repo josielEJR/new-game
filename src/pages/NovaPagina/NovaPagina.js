@@ -5,7 +5,7 @@ const NovaPagina = () => {
   const [bolinhaPosition, setBolinhaPosition] = useState({ left: 320, top: 315 });
   const [pressedKeys, setPressedKeys] = useState([]);
   const [gameOver, setGameOver] = useState(false);
-  const [moveBolinhasIntervalId, setMoveBolinhasIntervalId] = useState(null);
+  const [chuvaBolinhasIntervalId, setChuvaBolinhasIntervalId] = useState(null);
   const [removeBolinhasIntervalId, setRemoveBolinhasIntervalId] = useState(null);
   const [moveBolinhaIntervalId, setMoveBolinhaIntervalId] = useState(null);
   const [restartGame, setRestartGame] = useState(false); // Novo estado para controlar o reinício do jogo
@@ -25,9 +25,9 @@ const NovaPagina = () => {
     
     return () => clearInterval(intervalId);
   }, [gameOver]);
-  
+  // efeito para as bolinhas cair e remover quando chegar no final 
   useEffect(() => {
-    const moveBolinhas = () => {
+    const chuvaBolinhas = () => {
       if (!gameOver) {
         setBolinhas((prevBolinhas) =>
           prevBolinhas.map((bolinha) => ({
@@ -38,8 +38,8 @@ const NovaPagina = () => {
       }
     };
   
-    const moveIntervalId = setInterval(moveBolinhas, 50);
-    setMoveBolinhasIntervalId(moveIntervalId);
+    const moveIntervalId = setInterval(chuvaBolinhas, 50);
+    setChuvaBolinhasIntervalId(moveIntervalId);
   
     const removeBolinhas = () => {
       setBolinhas((prevBolinhas) => prevBolinhas.filter((bolinha) => bolinha.top <= 675));
@@ -57,7 +57,7 @@ const NovaPagina = () => {
   useEffect(() => {
     const moveBolinha = () => {
       const { left, top } = bolinhaPosition;
-      const step = 5;
+      const step = 10;
       let newLeft = left;
       let newTop = top;
 
@@ -77,7 +77,7 @@ const NovaPagina = () => {
       setBolinhaPosition({ left: newLeft, top: newTop });
     };
 
-    const moveIntervalId = setInterval(moveBolinha, 50);
+    const moveIntervalId = setInterval(moveBolinha, 30);
     setMoveBolinhaIntervalId(moveIntervalId);
 
     return () => clearInterval(moveIntervalId);
@@ -120,8 +120,7 @@ const NovaPagina = () => {
         const raioBolinha = 10; // Raio da bolinha que cai
   
         // Calcula a distância entre os centros das bolinhas
-        const distancia = Math.sqrt((bolinhaMovidaX - bolinhaX) ** 2 + (bolinhaMovidaY - bolinhaY) ** 2);
-  
+        const distancia = Math.sqrt((bolinhaMovidaX - bolinhaX) ** 2 + (bolinhaMovidaY - bolinhaY) ** 2)
         // Verifica se houve colisão comparando as distâncias com os raios das bolinhas
         if (distancia < raioBolinhaMovida + raioBolinha) {
           setGameOver(true);
@@ -130,9 +129,8 @@ const NovaPagina = () => {
     };
   
     checkCollision();
+
   }, [bolinhaPosition, bolinhas]);
-  
-  
   // Função para reiniciar o jogo
   const handleRestart = () => {
     setBolinhas([]); // Limpa o estado das bolinhas
@@ -143,58 +141,65 @@ const NovaPagina = () => {
   }
   
   useEffect(() => {
-    if (restartGame) {
-      // Resetar o jogo aqui, por exemplo, reiniciando os intervalos
-      const addBolinha = () => {
-        const novaBolinha = {
-          left: Math.random() * 685,
-          top: 15,
-        };
-        setBolinhas((prevBolinhas) => [...prevBolinhas, novaBolinha]);
-      };
-      // Salvando o ID do intervalo para poder limpar depois
-      const intervalId = setInterval(addBolinha, 1000);
+    if (restartGame) {    
+      // Reinicia o jogo aqui, por exemplo, reiniciando os intervalos
+      const intervalId = setInterval(() => {
+        if (!gameOver) {
+          const novaBolinha = {
+            left: Math.random() * 685,
+            top: 15,
+          };
+          setBolinhas((prevBolinhas) => [...prevBolinhas, novaBolinha]);
+        }
+      }, 1000);
       // Limpa o intervalo quando o componente é desmontado ou o jogo reiniciado
       return () => clearInterval(intervalId);
     }
     setRestartGame(false); // Resetar o estado de reinício após reiniciar o jogo
-  }, [restartGame])
+  }, [restartGame, gameOver])
 // logica para parar de aparecer bolinhas após intervalos
   useEffect(() => {
     if (gameOver) {
-      clearInterval(moveBolinhasIntervalId);
+      clearInterval(chuvaBolinhasIntervalId);
       clearInterval(removeBolinhasIntervalId);
       clearInterval(moveBolinhaIntervalId);
     }
-  }, [gameOver, restartGame, moveBolinhasIntervalId, removeBolinhasIntervalId, moveBolinhaIntervalId]);
+  }, [gameOver, restartGame, chuvaBolinhasIntervalId, removeBolinhasIntervalId, moveBolinhaIntervalId]);
 
   return (
-    <div className=" h-14 bg-gradient-to-r from-cyan-500 to-blue-500 w-full min-h-screen flex justify-center items-center "> 
-      <div className=" box-border w-700 h-700  relative m-10 p-4 border-4 border-black " >
-        {bolinhas.map((bolinha, index) => (
-          <div
-            key={index}
-            className="w-5 h-5 bg-teal-200  rounded-full absolute "
-            style={{ left: bolinha.left, top: bolinha.top }}
-          ></div>
-        ))}
-        <div 
-        className="w-6 h-6 bg-blue-500 rounded-full absolute " 
+    //div pai que abraça todos os componentes
+    <div className="h-screen overflow-auto bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-center items-center">
+    {/* div da caixa do jogo */}
+    <div className="box-border w-700 h-700 relative m-10 p-4 border-4 border-black" style={{ bottom: '50px' }}>
+      {bolinhas.map((bolinha, index) => (
+        <div // div da bolinha que cai
+          key={index} 
+          className="w-5 h-5 bg-teal-200 rounded-full absolute"
+          style={{ left: bolinha.left, top: bolinha.top }}
+        ></div>
+      ))}
+      {/* div da bolinha que se move */}
+      <div
+        className="w-6 h-6 bg-blue-500 rounded-full absolute"
         style={{ left: bolinhaPosition.left + 'px', top: bolinhaPosition.top + 'px' }}>
-        </div>
-        {gameOver && 
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-black text-center">GameOver</div>}
       </div>
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-10 " 
-      style={{ top:"900px" }}>
-  <button
-    onClick={handleRestart}
-    className="px-5 py-4 text-base bg-red-600 text-white rounded-md border-none cursor-pointer transition-colors duration-300 hover:bg-green-600">
-    Reiniciar
+      {/* Exibir "GameOver" se o jogo acabou */}
+      {gameOver && 
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-black text-center">
+        GameOver
+      </div>}
+    </div>
+    {/* botão de reiniciar */}
+    {gameOver &&
+    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-10">
+      <button
+        onClick={handleRestart}
+        className="px-5 py-4 text-base bg-red-600 text-white rounded-md border-none cursor-pointer transition-colors duration-300 hover:bg-green-600">
+        Reiniciar
   </button>
-</div>
+</div>}
     </div>
   );
 };
 
-export default NovaPagina;
+export default NovaPagina
