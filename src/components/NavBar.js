@@ -11,16 +11,22 @@ const NavBar = () => {
         Home
       </NavLink>
       <NavLink
-        to="/Velha"
+        to="/JogoDaVelha"
         className="text-red-500 my-2 py-1 p-5 text-4xl hover:text-gray-300"
       >
         Jogo da velha
       </NavLink>
       <NavLink
-        to="/nova"
+        to="/GameBall"
         className="text-red-500 my-2 py-1 p-5 text-4xl hover:text-gray-300"
       >
         Jogo da bolinha
+      </NavLink>
+      <NavLink
+        to="/login"
+        className="text-red-500 my-2 py-1 p-5 text-4xl hover:text-gray-300"
+      >
+        Login
       </NavLink>
     </nav>
   );

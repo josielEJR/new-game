@@ -7,6 +7,7 @@ import NavBar from './components/NavBar';
 import JogoDaVelha from './pages/JogaDaVelha/JogoDaVelha';
 import NovaPagina from './pages/NovaPagina/NovaPagina';
 import Home from './pages/Home/Home';
+import Login from './pages/Login/Login';
 
 const App = () => {
   return (
@@ -15,8 +16,9 @@ const App = () => {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/Velha" element={<JogoDaVelha />} />
-          <Route path="/nova" element={<NovaPagina />} />
+          <Route path="/JogoDaVelha" element={<JogoDaVelha />} />
+          <Route path="/GameBall" element={<NovaPagina />} />
+          <Route path="/Login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </div>
