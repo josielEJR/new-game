@@ -7,7 +7,7 @@ const Login = () => {
     const [showLoginAlert, setShowLoginAlert] = useState(<div></div>)
     
 
-    // validação de e-mail
+    
     const checkEmail = () => {
       const emails = ['@gmail.com', '@outlook.com', '@hotmail.com']
       let isEmailValid = false
@@ -25,7 +25,6 @@ const Login = () => {
       
   }
 
-  // validação de senha
   const checkPassword = () => {
       const dividedPass = password.split('')
       if (dividedPass.length >= 6) {
@@ -37,38 +36,32 @@ const Login = () => {
   }
 
   const handleSubmit = (e) => {
-      e.preventDefault()
-      if (checkEmail()) {
-          if (checkPassword()) {
-              setIsLogged(true)
-              setShowLoginAlert(<div className='loginSuccess'>Logged with success!</div>)
-
-              setTimeout(() => {
-                setEmail("");
-                setPassword("");
-                setShowLoginAlert(null); // Clear alert after delay
-              }, 2000); // Adjust delay as needed (e.g., 2000 milliseconds = 2 second)
-            } else {
-              // Login failed
-              setIsLogged(false);
-              
-            }
-          }
+    e.preventDefault();
+    if (checkEmail()) {
+        if (checkPassword() ) {
+            setIsLogged(true)
+            setShowLoginAlert(<div className='loginSuccess'>Logged with success!</div>)
+        } else {
+            setIsLogged(false)
+            
         }
+    }else{
+        setIsLogged(false)
+    }
+    console.log("Form submitted!")
+}
 
   return (
-    <div className="min-h-screen flex justify-center items-center text-3xl bg-gradient-to-br from-black to-blue-500 ">
-        <div className=" bg-white p-8 rounded-lg aline-colun shadow-md w-700 h-auto">
-            <h2 className=" flex p-3 col-span-2">Login form 🐞</h2>
+    <div className="min-h-screen flex justify-center items-center text-4xl bg-gradient-to-br from-black to-blue-500 ">
+        <div className=" bg-white p-8 rounded-lg shadow-md w-700 h-auto">
+            <h2 className=" flex p-3 ">Login form 🐞</h2>
         <form 
             className="flex flex-col items-center"
-            
-            onSubmit={{
-              handleSubmit}}
+            onSubmit={handleSubmit}
         >
           <div className="text-red-500 font-bold" style={{ display: isLogged ? 'none' : 'block' }}>E-MAIL OR PASSWORD WRONG.</div>
         <label className="mb-4 p-4">
-            <span className="p-4"  >E-mail:</span>
+            <span >E-mail: </span>
             <input
                 className="border border-gray-400 rounded-md px-4 py-2"
                 type="email"
@@ -105,15 +98,15 @@ const Login = () => {
         style={{
           display: email === '' ? 'none' : 'inline-block'
         }}
-        >
-          {isLogged ? 'Logging in...' : 'Login'}
+        >Login
         </button>
       </form>
       </div>
       <div className="fixed bottom-0 left-0 bg-green-500 text-white login-alert-large rounded font-bold">
       {showLoginAlert}
       </div>
-      </div>
+    </div>
+    
   )
 }
 
