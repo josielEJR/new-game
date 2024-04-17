@@ -5,9 +5,7 @@ const Login = () => {
     const [ password, setPassword]  = useState("")
     const [isLogged, setIsLogged] = useState(true)
     const [showLoginAlert, setShowLoginAlert] = useState(<div></div>)
-    
-
-    
+    // validação de e-mail
     const checkEmail = () => {
       const emails = ['@gmail.com', '@outlook.com', '@hotmail.com']
       let isEmailValid = false
@@ -24,7 +22,7 @@ const Login = () => {
           return false
       
   }
-
+  // validação de senha
   const checkPassword = () => {
       const dividedPass = password.split('')
       if (dividedPass.length >= 6) {
@@ -40,10 +38,10 @@ const Login = () => {
     if (checkEmail()) {
         if (checkPassword() ) {
             setIsLogged(true)
-            setShowLoginAlert(<div className='loginSuccess'>Logged with success!</div>)
+            setShowLoginAlert(<div>Logged with success!</div>)
         } else {
             setIsLogged(false)
-            
+            setShowLoginAlert(null)
         }
     }else{
         setIsLogged(false)
@@ -53,15 +51,15 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center text-4xl bg-gradient-to-br from-black to-blue-500 ">
-        <div className=" bg-white p-8 rounded-lg shadow-md w-700 h-auto">
-            <h2 className=" flex p-3 ">Login form 🐞</h2>
+        <div className=" bg-white p-8 rounded-lg shadow-md h-100">
+            <h2 className=" text-2x1 font-semibold">Login form 🐞</h2>
         <form 
             className="flex flex-col items-center"
             onSubmit={handleSubmit}
         >
           <div className="text-red-500 font-bold" style={{ display: isLogged ? 'none' : 'block' }}>E-MAIL OR PASSWORD WRONG.</div>
-        <label className="mb-4 p-4">
-            <span >E-mail: </span>
+        <label className="mb-4 w-full">
+            <span className="block mb-1" >E-mail </span>
             <input
                 className="border border-gray-400 rounded-md px-4 py-2"
                 type="email"
@@ -76,8 +74,8 @@ const Login = () => {
             >
             </input> 
         </label>
-        <label className="mb-4">
-            <span>Password: </span>
+        <label className="mb-4 w-full">
+            <span className="block mb-1">Password </span>
             <input
                 className="border border-gray-400 rounded-md px-4 py-2"
                 type="password"
@@ -93,7 +91,7 @@ const Login = () => {
             </input> 
         </label>
         <button 
-        className="bg-blue-600 hover:bgblue-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-blue-700 flex text-white font-bold py-2 px-4 rounded "
         onClick={handleSubmit}
         style={{
           display: email === '' ? 'none' : 'inline-block'
