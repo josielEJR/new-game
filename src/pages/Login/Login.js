@@ -4,10 +4,7 @@ const Login = () => {
     const [ email, setEmail ] = useState("")
     const [ password, setPassword]  = useState("")
     const [isLogged, setIsLogged] = useState(true)
-    //const [loginAlert, setLoginAlert] =  useState(true)
     const [showLoginAlert, setShowLoginAlert] = useState(<div></div>)
-    
-
     
     const checkEmail = () => {
       const emails = ['@gmail.com', '@outlook.com', '@hotmail.com']
@@ -42,14 +39,19 @@ const Login = () => {
           if (checkPassword()) {
               setIsLogged(true)
               setShowLoginAlert(<div className='loginSuccess'>Logged with success!</div>)
-          } else {
-              setIsLogged(false)
-              setShowLoginAlert(<div></div>)
+
+              setTimeout(() => {
+                setEmail("");
+                setPassword("");
+                setShowLoginAlert(null); // Clear alert after delay
+              }, 2000); // Adjust delay as needed (e.g., 2000 milliseconds = 2 second)
+            } else {
+              // Login failed
+              setIsLogged(false);
+              
+            }
           }
-      }else{
-          setIsLogged(false)
-      }
-  }
+        }
 
   return (
     <div className="min-h-screen flex justify-center items-center text-3xl bg-gradient-to-br from-black to-blue-500 ">
