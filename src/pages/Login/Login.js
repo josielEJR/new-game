@@ -6,6 +6,8 @@ const Login = () => {
     const [isLogged, setIsLogged] = useState(true)
     const [showLoginAlert, setShowLoginAlert] = useState(<div></div>)
     
+
+    // validação de e-mail
     const checkEmail = () => {
       const emails = ['@gmail.com', '@outlook.com', '@hotmail.com']
       let isEmailValid = false
@@ -23,6 +25,7 @@ const Login = () => {
       
   }
 
+  // validação de senha
   const checkPassword = () => {
       const dividedPass = password.split('')
       if (dividedPass.length >= 6) {
@@ -102,7 +105,8 @@ const Login = () => {
         style={{
           display: email === '' ? 'none' : 'inline-block'
         }}
-        >Login
+        >
+          {isLogged ? 'Logging in...' : 'Login'}
         </button>
       </form>
       </div>
